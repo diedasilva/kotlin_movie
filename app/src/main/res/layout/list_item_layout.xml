@@ -2,7 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:clickable="true"
+    android:padding="16dp"
+    android:id="@+id/linearLayout">
 
     <TextView
         android:id="@+id/textView"

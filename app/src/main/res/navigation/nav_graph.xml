@@ -10,11 +10,6 @@
         android:label="Main Fragment" />
 
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.kotlin_movie.ui.detail.DetailFragment"
-        android:label="Detail Fragment" />
-
-    <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.kotlin_movie.ui.favorites.FavoritesFragment"
         android:label="Favorites Fragment" />

@@ -1,15 +1,18 @@
 package com.example.kotlin_movie.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kotlin_movie.R
+import com.example.kotlin_movie.ui.detail.DetailActivity
 
 class ListViewAdapter(private val context: Context, private val data: List<String>) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -55,6 +58,22 @@ class ListViewAdapter(private val context: Context, private val data: List<Strin
         viewHolder.button.setOnClickListener {
             isItemLiked[position] = !isItemLiked[position]
             notifyDataSetChanged()
+        }
+
+        val linearLayout = view.findViewById<LinearLayout>(R.id.linearLayout)
+        linearLayout.setOnClickListener {
+            // Gérer le clic sur le LinearLayout
+            // Vous pouvez accéder à l'ID du TextView ici si nécessaire
+            val textViewId = viewHolder.textView.id
+            val item = getItem(position) as String
+            val message = "Vous avez cliqué sur l'élément : $item"
+
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("item", item)
+            context.startActivity(intent)
+
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            // Lancer une nouvelle activité ou un fragment avec l'ID du TextView
         }
 
         return view
