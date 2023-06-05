@@ -7,10 +7,7 @@ import com.example.kotlin_movie.data.models.Movie
 import com.example.kotlin_movie.data.repository.MovieRepository
 
 class FavoritesViewModel : ViewModel() {
-    private val _likedMovies = MutableLiveData<List<Movie>>()
-    val likedMovies: LiveData<List<Movie>> = _likedMovies
-
-    init {
-        _likedMovies.value = MovieRepository.getLikedMovies()
+    val likedMovies: MutableLiveData<List<String>> by lazy {
+        MutableLiveData<List<String>>()
     }
 }

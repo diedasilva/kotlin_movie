@@ -2,9 +2,9 @@ package com.example.kotlin_movie.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
@@ -12,18 +12,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kotlin_movie.R
+import com.example.kotlin_movie.data.models.Movie
 import com.example.kotlin_movie.ui.detail.DetailActivity
 
-class ListViewAdapter(private val context: Context, private val data: List<String>) : BaseAdapter() {
+class ListViewAdapter(private val context: Context, var data: List<Movie>) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val dataList: List<String> = data
+    private val dataList: MutableList<Movie> = data.toMutableList()
     private val isItemLiked: MutableList<Boolean> = MutableList(data.size) { false }
-
+    private val likedItems: MutableList<String> = mutableListOf()
 
     override fun getCount(): Int {
         return dataList.size
     }
-
     override fun getItem(position: Int): Any {
         return dataList[position]
     }
@@ -31,11 +31,22 @@ class ListViewAdapter(private val context: Context, private val data: List<Strin
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
+    fun getLikedItems(): List<String> {
+        return likedItems.toList()
+    }
+    fun updateData(newData: List<Movie>) {
+        dataList.clear()
+        dataList.addAll(newData)
+        isItemLiked.clear()
+        isItemLiked.addAll(MutableList(newData.size) { false })
+        notifyDataSetChanged()
+        Log.d("ListViewAdapter", "updateData: $dataList")
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View
         val viewHolder: ViewHolder
-
+        val movie = getItem(position) as Movie
         if (convertView == null) {
             view = inflater.inflate(R.layout.list_item_layout, parent, false)
             viewHolder = ViewHolder(view)
@@ -45,10 +56,9 @@ class ListViewAdapter(private val context: Context, private val data: List<Strin
             viewHolder = view.tag as ViewHolder
         }
 
-        val item = getItem(position) as String
-
-        viewHolder.textView.text = item
+        viewHolder.textView.text = movie.title
         val isLiked = isItemLiked[position]
+
         if (isLiked) {
             viewHolder.button.setBackgroundResource(R.drawable.ic_favorite)
         } else {
@@ -57,22 +67,27 @@ class ListViewAdapter(private val context: Context, private val data: List<Strin
 
         viewHolder.button.setOnClickListener {
             isItemLiked[position] = !isItemLiked[position]
+            //Il n'aime pas le item ici à changer fait crash le coeur
+            val item = getItem(position) as String
+
+            if (isItemLiked[position]) {
+                viewHolder.button.setBackgroundResource(R.drawable.ic_favorite)
+                Toast.makeText(context, "L'item $item est liké", Toast.LENGTH_SHORT).show()
+                likedItems.add(item)
+            } else {
+                viewHolder.button.setBackgroundResource(R.drawable.ic_favorite_border)
+                Toast.makeText(context, "L'item $item n'est pas liké", Toast.LENGTH_SHORT).show()
+                likedItems.remove(item)
+            }
             notifyDataSetChanged()
         }
 
         val linearLayout = view.findViewById<LinearLayout>(R.id.linearLayout)
         linearLayout.setOnClickListener {
-            // Gérer le clic sur le LinearLayout
-            // Vous pouvez accéder à l'ID du TextView ici si nécessaire
-            val textViewId = viewHolder.textView.id
-            val item = getItem(position) as String
-            val message = "Vous avez cliqué sur l'élément : $item"
-
+            Log.d("ListViewAdapter", "getView: $movie")
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("item", item)
+            intent.putExtra("itemId", movie.id)
             context.startActivity(intent)
-
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             // Lancer une nouvelle activité ou un fragment avec l'ID du TextView
         }
 

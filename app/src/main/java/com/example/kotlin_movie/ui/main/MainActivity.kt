@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         loadFragment(MainFragment())
+
         bottomNav = findViewById(R.id.bottomNavigationView) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
