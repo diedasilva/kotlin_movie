@@ -9,19 +9,14 @@ import android.widget.TextView
 import com.example.kotlin_movie.R
 import com.example.kotlin_movie.data.models.Movie
 import com.example.kotlin_movie.data.repository.MovieRepository
-import com.example.kotlin_movie.ui.main.MainFragment
 import com.squareup.picasso.Picasso
 
 class DetailActivity : AppCompatActivity() {
-    private lateinit var viewModel: DetailViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
         val item = intent.getIntExtra("itemId", 0)
-        //val detailTextView = findViewById<TextView>(R.id.detailTextView);
-        //detailTextView.text = item
         getMovieDetails(item)
         val backButton = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {

@@ -12,15 +12,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.kotlin_movie.R
+import com.example.kotlin_movie.data.AppData
+import com.example.kotlin_movie.data.MovieItem
 import com.example.kotlin_movie.data.models.Movie
 import com.example.kotlin_movie.ui.detail.DetailActivity
+import kotlin.math.log
 
 class ListViewAdapter(private val context: Context, var data: List<Movie>) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val dataList: MutableList<Movie> = data.toMutableList()
     private val isItemLiked: MutableList<Boolean> = MutableList(data.size) { false }
-    private val likedItems: MutableList<String> = mutableListOf()
-
     override fun getCount(): Int {
         return dataList.size
     }
@@ -31,14 +32,12 @@ class ListViewAdapter(private val context: Context, var data: List<Movie>) : Bas
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
-    fun getLikedItems(): List<String> {
-        return likedItems.toList()
-    }
     fun updateData(newData: List<Movie>) {
         dataList.clear()
         dataList.addAll(newData)
-        isItemLiked.clear()
-        isItemLiked.addAll(MutableList(newData.size) { false })
+        isItemLiked.addAll(newData.map { movie ->
+            AppData.instance.likedItems.any { it.id == movie.id }
+        })
         notifyDataSetChanged()
         Log.d("ListViewAdapter", "updateData: $dataList")
     }
@@ -58,7 +57,6 @@ class ListViewAdapter(private val context: Context, var data: List<Movie>) : Bas
 
         viewHolder.textView.text = movie.title
         val isLiked = isItemLiked[position]
-
         if (isLiked) {
             viewHolder.button.setBackgroundResource(R.drawable.ic_favorite)
         } else {
@@ -68,17 +66,18 @@ class ListViewAdapter(private val context: Context, var data: List<Movie>) : Bas
         viewHolder.button.setOnClickListener {
             isItemLiked[position] = !isItemLiked[position]
             //Il n'aime pas le item ici à changer fait crash le coeur
-            val item = getItem(position) as String
+            val item = MovieItem(movie.id, movie.title)
 
             if (isItemLiked[position]) {
                 viewHolder.button.setBackgroundResource(R.drawable.ic_favorite)
                 Toast.makeText(context, "L'item $item est liké", Toast.LENGTH_SHORT).show()
-                likedItems.add(item)
+                AppData.instance.likedItems.add(item)
             } else {
                 viewHolder.button.setBackgroundResource(R.drawable.ic_favorite_border)
                 Toast.makeText(context, "L'item $item n'est pas liké", Toast.LENGTH_SHORT).show()
-                likedItems.remove(item)
+                AppData.instance.likedItems.remove(item)
             }
+            Log.d("ListViewAdapter", "getViewLikedItems: ${AppData.instance.likedItems}")
             notifyDataSetChanged()
         }
 

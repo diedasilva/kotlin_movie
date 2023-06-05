@@ -10,6 +10,7 @@ import android.widget.ListView
 import androidx.lifecycle.lifecycleScope
 import com.example.kotlin_movie.R
 import com.example.kotlin_movie.adapters.ListViewAdapter
+import com.example.kotlin_movie.data.AppData
 import com.example.kotlin_movie.data.models.Movie
 import kotlinx.coroutines.launch
 
@@ -22,14 +23,12 @@ import kotlinx.coroutines.launch
  */
 class MainFragment : Fragment() {
 
-    interface DataListener {
-        fun onDataReceived(data: List<String>)
-    }
 
     private lateinit var listView: ListView
     private lateinit var adapter: ListViewAdapter
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -41,6 +40,7 @@ class MainFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             getData()
+
         }
 
         return view
@@ -48,14 +48,13 @@ class MainFragment : Fragment() {
 
     private suspend fun getData() {
         try {
-            // Fetch data from MovieRepository
             com.example.kotlin_movie.data.repository.MovieRepository.getData { movies ->
                 // Call the onDataReceived callback with the list of movies
                 adapter.updateData(movies)
             }
         } catch (e: Exception) {
-            // Handle any exceptions that occur
             Log.e("MainFragment", "Error fetching data", e)
         }
     }
+
 }

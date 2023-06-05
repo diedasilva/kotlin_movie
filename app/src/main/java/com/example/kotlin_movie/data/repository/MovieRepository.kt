@@ -10,7 +10,6 @@ object MovieRepository {
     private val movies = mutableListOf<Movie>()
     private const val API_KEY = "986cc009b30512eb15a8cd91faa30a7c"
 
-    fun getMovies(): List<Movie> = movies
     fun getMovie(id: String): Movie? {
         val movieId = id.toIntOrNull()
         return if (movieId != null) {
@@ -19,15 +18,11 @@ object MovieRepository {
             null
         }
     }
-    fun getLikedMovies(): List<Movie> = movies.filter { it.isLiked }
     fun updateMovie(movie: Movie) {
         val index = movies.indexOfFirst { it.id == movie.id }
         if (index != -1) {
             movies[index] = movie
         }
-    }
-    fun addMovie(movie: Movie) {
-        movies.add(movie)
     }
     fun getData(onResult: (List<Movie>) -> Unit) {
 
@@ -49,13 +44,11 @@ object MovieRepository {
                     }
                     onResult(formattedMovies)
                 } else {
-                    // Gérer l'erreur ici
                     Log.d("API_request_error", "Error: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                // Gérer l'échec ici
                 Log.d("API_request_error", "Error: ${t.message}")
             }
         })
@@ -68,14 +61,11 @@ object MovieRepository {
                     val movie: Movie? = response.body()
                     onResult(movie)
                 } else {
-                    // Gérer l'erreur ici
                     Log.d("API_request_error", "Error: ${response.code()}")
                     onResult(null)
                 }
             }
-
             override fun onFailure(call: Call<Movie>, t: Throwable) {
-                // Gérer l'échec ici
                 Log.d("API_request_error", "Error: ${t.message}")
                 onResult(null)
             }
