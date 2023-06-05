@@ -16,7 +16,6 @@ import com.example.kotlin_movie.data.AppData
 import com.example.kotlin_movie.data.MovieItem
 import com.example.kotlin_movie.data.models.Movie
 import com.example.kotlin_movie.ui.detail.DetailActivity
-import kotlin.math.log
 
 class ListViewAdapter(private val context: Context, var data: List<Movie>) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -65,16 +64,15 @@ class ListViewAdapter(private val context: Context, var data: List<Movie>) : Bas
 
         viewHolder.button.setOnClickListener {
             isItemLiked[position] = !isItemLiked[position]
-            //Il n'aime pas le item ici à changer fait crash le coeur
             val item = MovieItem(movie.id, movie.title)
 
             if (isItemLiked[position]) {
                 viewHolder.button.setBackgroundResource(R.drawable.ic_favorite)
-                Toast.makeText(context, "L'item $item est liké", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "L'item ${item.title} est liké", Toast.LENGTH_SHORT).show()
                 AppData.instance.likedItems.add(item)
             } else {
                 viewHolder.button.setBackgroundResource(R.drawable.ic_favorite_border)
-                Toast.makeText(context, "L'item $item n'est pas liké", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "L'item ${item.title} n'est pas liké", Toast.LENGTH_SHORT).show()
                 AppData.instance.likedItems.remove(item)
             }
             Log.d("ListViewAdapter", "getViewLikedItems: ${AppData.instance.likedItems}")
@@ -87,7 +85,6 @@ class ListViewAdapter(private val context: Context, var data: List<Movie>) : Bas
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("itemId", movie.id)
             context.startActivity(intent)
-            // Lancer une nouvelle activité ou un fragment avec l'ID du TextView
         }
 
         return view
