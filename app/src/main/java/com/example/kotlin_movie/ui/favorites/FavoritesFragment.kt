@@ -29,12 +29,15 @@ class FavoritesFragment : Fragment() {
 
         listView = view.findViewById(R.id.listViewFavorites)
 
+        // Crée un ArrayAdapter avec la liste des films favoris depuis AppData
         adapter = object : ArrayAdapter<MovieItem>(requireContext(), android.R.layout.simple_list_item_1, ArrayList(AppData.instance.likedItems)) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val textView = view.findViewById<TextView>(android.R.id.text1)
                 val movieItem = getItem(position)
                 textView.text = getItem(position)?.title
+
+                // Définit un écouteur de clic pour chaque élément de la ListView
                 view.setOnClickListener {
                     val intent = Intent(context, DetailActivity::class.java)
                     intent.putExtra("itemId", movieItem?.id)
@@ -43,12 +46,15 @@ class FavoritesFragment : Fragment() {
                 return view
             }
         }
+        // Définit l'adaptateur pour la ListView
         listView.adapter = adapter
         return view
     }
 
     override fun onResume() {
         super.onResume()
+
+        // Met à jour l'adaptateur avec la liste des films favoris mise à jour depuis AppData
         val newList = ArrayList(AppData.instance.likedItems)
         adapter.clear()
         adapter.addAll(newList)

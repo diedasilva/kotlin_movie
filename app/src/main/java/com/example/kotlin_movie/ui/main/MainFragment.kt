@@ -17,10 +17,11 @@ import kotlinx.coroutines.launch
 // TODO: Rename parameter arguments, choose names that match
 
 /**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Un fragment simple qui étend la classe [Fragment].
+ * Utilisez la méthode de fabrique [MainFragment.newInstance]
+ * pour créer une instance de ce fragment.
  */
+
 class MainFragment : Fragment() {
 
 
@@ -33,23 +34,30 @@ class MainFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
+
         listView = view.findViewById(R.id.listView)
+
+        // Initialise un adaptateur ListViewAdapter avec une liste vide
         adapter = ListViewAdapter(requireContext(), emptyList())
         Log.d("MainFragment", "onCreateView: $adapter")
+
+        // Associe l'adaptateur à la ListView
         listView.adapter = adapter
 
+        // Utilise un LifecycleScope pour lancer une coroutine
         viewLifecycleOwner.lifecycleScope.launch {
+            // Appelle la fonction getData() pour récupérer les données
             getData()
-
         }
 
         return view
     }
 
+    // Fonction suspendue pour récupérer les données
     private suspend fun getData() {
         try {
             com.example.kotlin_movie.data.repository.MovieRepository.getData { movies ->
-                // Call the onDataReceived callback with the list of movies
+                // Appelle la fonction updateData() de l'adaptateur avec la liste de films reçue
                 adapter.updateData(movies)
             }
         } catch (e: Exception) {

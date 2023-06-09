@@ -17,16 +17,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Charge le fragment principal lors de la création de l'activité
         loadFragment(MainFragment())
 
         bottomNav = findViewById(R.id.bottomNavigationView) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.mainFragment -> {
+                    // Charge le fragment principal lorsque l'élément correspondant est sélectionné
                     loadFragment(MainFragment())
                     true
                 }
                 R.id.favoritesFragment -> {
+                    // Charge le fragment des favoris lorsque l'élément correspondant est sélectionné
                     loadFragment(FavoritesFragment())
                     true
                 }

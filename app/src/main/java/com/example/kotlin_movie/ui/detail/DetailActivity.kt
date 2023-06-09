@@ -16,14 +16,21 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        // Récupère l'ID du film depuis l'intent
         val item = intent.getIntExtra("itemId", 0)
+
+        // Appelle la fonction pour récupérer les détails du film
         getMovieDetails(item)
+
+        // Configure le bouton de retour
         val backButton = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {
             onBackPressed()
         }
 
     }
+
+    // Fonction pour récupérer les détails du film
     private fun getMovieDetails(movieId: Int) {
         MovieRepository.getMovieDetailsRepo(movieId) { movie ->
             if (movie != null) {
@@ -36,6 +43,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    // Fonction pour afficher les détails du film
     private fun displayMovieDetails(movie: Movie) {
         // Affichez les détails du film dans votre interface utilisateur
         val movieImageView = findViewById<ImageView>(R.id.movieImageView)
@@ -47,8 +55,8 @@ class DetailActivity : AppCompatActivity() {
 
         Picasso.get()
             .load(posterimg)
-            .placeholder(R.drawable.ic_launcher_background) // Image par défaut en cas de chargement ou d'erreur
-            .error(R.drawable.ic_launcher_background) // Image par défaut en cas d'erreur
+            .placeholder(R.drawable.ic_launcher_background)
+            .error(R.drawable.ic_launcher_background)
             .fit()
             .centerCrop()
             .into(movieImageView)

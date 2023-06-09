@@ -10,22 +10,8 @@ object MovieRepository {
     private val movies = mutableListOf<Movie>()
     private const val API_KEY = "986cc009b30512eb15a8cd91faa30a7c"
 
-    fun getMovie(id: String): Movie? {
-        val movieId = id.toIntOrNull()
-        return if (movieId != null) {
-            movies.find { it.id == movieId }
-        } else {
-            null
-        }
-    }
-    fun updateMovie(movie: Movie) {
-        val index = movies.indexOfFirst { it.id == movie.id }
-        if (index != -1) {
-            movies[index] = movie
-        }
-    }
+    // Récupère les données des films populaires depuis l'API
     fun getData(onResult: (List<Movie>) -> Unit) {
-
         RetrofitService.tmdbApi.getPopularMovies(API_KEY).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if (response.isSuccessful) {
@@ -54,6 +40,7 @@ object MovieRepository {
         })
     }
 
+    // Récupère les détails d'un film depuis l'API
     fun getMovieDetailsRepo(movieId: Int, onResult: (Movie?) -> Unit) {
         RetrofitService.tmdbApi.getMovieDetails(movieId, API_KEY).enqueue(object : Callback<Movie> {
             override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
